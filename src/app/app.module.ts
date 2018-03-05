@@ -10,6 +10,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HistoryPage } from '../pages/history/history';
 import { ThisWeekPage } from '../pages/this-week/this-week';
 
+import { SQLiteProvider } from '../providers/sqlite/sqlite';
+
+import { SQLite } from '@ionic-native/sqlite';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -31,6 +35,8 @@ import { ThisWeekPage } from '../pages/this-week/this-week';
   providers: [
     StatusBar,
     SplashScreen,
+    SQLiteProvider,
+    SQLite,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
