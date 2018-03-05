@@ -10,10 +10,14 @@ export class ThisWeekPage {
   tasks = []
   constructor(public navCtrl: NavController, private data: SQLiteProvider) {
     console.log("here");
-    data.GetAllTasks().then(success => {
+    
+  }
+
+  ionViewDidLoad() {
+    console.log("here4");
+    this.data.GetAllTasks().then(success => {
       console.log(JSON.stringify(success));
     })
-    
   }
 
 }
