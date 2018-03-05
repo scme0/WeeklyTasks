@@ -7,17 +7,11 @@ import { SQLiteProvider } from '../../providers/sqlite/sqlite';
   templateUrl: 'this-week.html'
 })
 export class ThisWeekPage {
-  tasks = []
   constructor(public navCtrl: NavController, private data: SQLiteProvider) {
-    console.log("here");
     
   }
 
   ionViewDidLoad() {
-    console.log("here4");
-    this.data.GetAllTasks().then(success => {
-      console.log(JSON.stringify(success));
-    })
   }
 
 }

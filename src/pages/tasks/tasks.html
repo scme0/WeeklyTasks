@@ -1,0 +1,16 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Tasks</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content padding>
+    <ion-list>
+        <ion-item>
+            <b>TaskId| Name| IsCurrent</b>
+        </ion-item>
+        <ion-item *ngFor="let task of tasks">
+            {{task.Id}}| {{task.Name}}| {{task.IsCurrent}}
+        </ion-item>
+    </ion-list>
+  </ion-content>

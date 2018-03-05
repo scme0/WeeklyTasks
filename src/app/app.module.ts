@@ -13,12 +13,14 @@ import { ThisWeekPage } from '../pages/this-week/this-week';
 import { SQLiteProvider } from '../providers/sqlite/sqlite';
 
 import { SQLite } from '@ionic-native/sqlite';
+import { TasksPage } from '../pages/tasks/tasks';
 
 @NgModule({
   declarations: [
     MyApp,
     HistoryPage,
     ThisWeekPage,
+    TasksPage,
     TabsPage
   ],
   imports: [
@@ -30,6 +32,7 @@ import { SQLite } from '@ionic-native/sqlite';
     MyApp,
     HistoryPage,
     ThisWeekPage,
+    TasksPage,
     TabsPage
   ],
   providers: [
