@@ -7,15 +7,23 @@ import { SQLiteProvider } from "../../providers/sqlite/sqlite";
     templateUrl: 'tasks.html'
   })
   export class TasksPage {
-    tasks = []
+
+    tasks = [];
+
     constructor(public navCtrl: NavController, private data: SQLiteProvider) {
+        data.subscribeForChanges(this,"refresh");
     }
   
     ionViewDidLoad() {
         this.refresh();
     }
 
-    async refresh(){
+    async refresh() {
         this.tasks = await this.data.GetAllTasks();
+        console.log(JSON.stringify(this.tasks));
+    }
+
+    deleteTask(task){
+        this.data.removeTask(task.Id);
     }
   }

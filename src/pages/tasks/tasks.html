@@ -6,11 +6,18 @@
   
   <ion-content padding>
     <ion-list>
-        <ion-item>
-            <b>TaskId| Name| IsCurrent</b>
-        </ion-item>
-        <ion-item *ngFor="let task of tasks">
-            {{task.Id}}| {{task.Name}}| {{task.IsCurrent}}
-        </ion-item>
+        <ion-item-sliding *ngFor="let task of tasks">
+            <ion-item>
+                <p item-start>{{task.Id}}</p>
+                <ion-label>{{task.Name}}</ion-label>
+                <ion-checkbox item-end [(ngModel)]="task.IsCurrent"></ion-checkbox>
+            </ion-item>
+            <ion-item-options side="right">
+                <button ion-button color="danger" (click)="deleteTask(task)">
+                    <ion-icon name="delete"></ion-icon>
+                    Delete
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
     </ion-list>
   </ion-content>
