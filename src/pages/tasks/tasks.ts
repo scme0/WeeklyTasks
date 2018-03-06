@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
-import { NavController } from "ionic-angular";
+import { NavController,ModalController, NavParams } from "ionic-angular";
 import { SQLiteProvider } from "../../providers/sqlite/sqlite";
+import { AddTaskPage } from "./add-task/add-task";
 
 @Component({
     selector: 'page-tasks',
@@ -10,8 +11,13 @@ import { SQLiteProvider } from "../../providers/sqlite/sqlite";
 
     tasks = [];
 
-    constructor(public navCtrl: NavController, private data: SQLiteProvider) {
+    constructor(public navCtrl: NavController, private data: SQLiteProvider, private modalCtrl: ModalController) {
         data.subscribeForChanges(this,"refresh");
+    }
+
+    addTask(){
+        let profileModal = this.modalCtrl.create(AddTaskPage);
+        profileModal.present();
     }
   
     ionViewDidLoad() {
