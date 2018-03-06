@@ -48,7 +48,7 @@ export class SQLiteProvider{
 
     async addTask(taskName: string, isCurrent: boolean)
     {
-        await this.database.executeSql("INSERT INTO Tasks (Name, IsCurrent) VALUES ('" + taskName + "','" + isCurrent + "')",[])
+        await this.database.executeSql("INSERT INTO Tasks (Name, IsCurrent) VALUES (?,?)",[taskName,isCurrent])
                            .then(success => {
                                this.notifyChanges();
                                })

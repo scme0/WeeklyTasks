@@ -14,7 +14,6 @@ import { SQLiteProvider } from '../providers/sqlite/sqlite';
 
 import { SQLite } from '@ionic-native/sqlite';
 import { TasksPage } from '../pages/tasks/tasks';
-import { AddTaskPage } from '../pages/tasks/add-task/add-task';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { AddTaskPage } from '../pages/tasks/add-task/add-task';
     HistoryPage,
     ThisWeekPage,
     TasksPage,
-    AddTaskPage,
     TabsPage
   ],
   imports: [
@@ -35,7 +33,6 @@ import { AddTaskPage } from '../pages/tasks/add-task/add-task';
     HistoryPage,
     ThisWeekPage,
     TasksPage,
-    AddTaskPage,
     TabsPage
   ],
   providers: [
