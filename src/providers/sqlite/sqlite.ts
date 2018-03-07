@@ -1,12 +1,15 @@
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import {Injectable} from '@angular/core';
 import { Task } from './Task';
+import { TaskStatus } from './task-status';
 
 @Injectable()
 export class SQLiteProvider{
     database: SQLiteObject = null;
 
     Tasks: Task[] = [];
+
+    ThisWeekTasks: TaskStatus[] = [];
 
     constructor(private sqlite: SQLite) {
         console.log("SQLiteProvider ctor");

@@ -10,8 +10,4 @@ export class ThisWeekPage {
   constructor(public navCtrl: NavController, private data: SQLiteProvider) {
     
   }
-
-  ionViewDidLoad() {
-  }
-
 }

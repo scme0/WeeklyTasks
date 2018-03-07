@@ -15,7 +15,6 @@ export class MyApp {
     platform.ready().then(() => {
       data.create().then(success => {
         this.rootPage = TabsPage;
-        console.log("here3");
 
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
