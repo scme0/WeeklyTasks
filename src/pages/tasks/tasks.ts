@@ -8,10 +8,9 @@ import { SQLiteProvider } from "../../providers/sqlite/sqlite";
 })
 export class TasksPage {
 
-    tasks = [];
-
-    constructor(public navCtrl: NavController, private data: SQLiteProvider, private alertCtrl: AlertController) {
-        data.subscribeForChanges(this, "refresh");
+    constructor(public navCtrl: NavController, 
+                private data: SQLiteProvider, 
+                private alertCtrl: AlertController) {
     }
 
     addTask() {
@@ -46,15 +45,6 @@ export class TasksPage {
             ]
         });
         alert.present();
-    }
-
-    ionViewDidLoad() {
-        this.refresh();
-    }
-
-    async refresh() {
-        this.tasks = await this.data.GetAllTasks();
-        console.log(JSON.stringify(this.tasks));
     }
 
     deleteTask(task) {

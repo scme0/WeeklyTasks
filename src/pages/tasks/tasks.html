@@ -11,13 +11,13 @@
   
   <ion-content padding>
     <ion-list>
-        <ion-item-sliding *ngFor="let task of tasks">
+        <ion-item-sliding *ngFor="let task of data.Tasks">
             <ion-item>
                 <p item-start>{{task.Id}}</p>
                 <ion-label>{{task.Name}}</ion-label>
                 <ion-checkbox item-end [(ngModel)]="task.IsCurrent"></ion-checkbox>
             </ion-item>
-            <ion-item-options side="right">
+            <ion-item-options side="left">
                 <button ion-button color="danger" (click)="deleteTask(task)">
                     <ion-icon name="delete"></ion-icon>
                     Delete
