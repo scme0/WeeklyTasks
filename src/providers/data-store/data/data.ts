@@ -3,6 +3,7 @@ import { SQLiteProvider } from "../sqlite/sqlite";
 import { CacheProvider } from "../cache/cache";
 import { Injectable } from "@angular/core";
 import { Task } from "../cache/Task";
+import { SortingHelpers } from "../cache/SortingHelpers";
 
 @Injectable()
 export class DataProvider implements IDataStore
@@ -16,6 +17,12 @@ export class DataProvider implements IDataStore
         return this.Cache.Tasks;
     }
 
+    public TaskStatuses(week: string)
+    {
+        this.Sqlite.createTaskStatusTable(week);
+        return this.Cache.getCachedWeek(week);
+    }
+
     async create() : Promise<any>
     {
         this.Cache.setTaskCurrencyChangeCallback(this, "setTaskCurrency");
@@ -24,15 +31,17 @@ export class DataProvider implements IDataStore
         await this.Sqlite.create();
         this.Cache.create();
 
+        let thisWeek = SortingHelpers.getMonday(new Date());
+
         let tasks = await this.Sqlite.getTasks()
-        tasks.forEach(task => {
+        tasks.forEach(async task => {
             this.Cache.addTaskAsObject(task);
+            let taskStatus = await this.Sqlite.getTaskStatus(task.Id, thisWeek);
+            if (taskStatus === null){
+               await this.Sqlite.addTaskStatus(task.Id,false,thisWeek);
+            }
+            this.Cache.addTaskStatus(task.Id,false,thisWeek);
         });
-        //TODO: Complete this.
-        // let taskStatuses = await this.Sqlite.getTaskStatuses("this_week");
-        // taskStatuses.forEach(taskStatus => {
-        //     this.Cache.addTaskStatusAsObject(taskStatus);
-        // });
     }
 
     async addTask(taskName: string, isCurrent: boolean)
@@ -51,12 +60,18 @@ export class DataProvider implements IDataStore
     {
         await this.Sqlite.setTaskCurrency(taskId, isCurrent);
         this.Cache.setTaskCurrency(taskId, isCurrent);
-        console.log("setTaskCurrency: taskId: " + taskId + " isCurrent: " + isCurrent);
     }
 
-    async setTaskComplete(taskId: number, week: string, isComplete: boolean)
-    {
-        await this.Sqlite.setTaskComplete(taskId, week, isComplete);
-        this.Cache.setTaskComplete(taskId, week, isComplete);
+    async addTaskStatus(taskId: number, isComplete: boolean, week: string){
+
+    }
+
+    async setTaskStatus(taskId: number, isComplete: boolean, week: string){
+        await this.Sqlite.setTaskStatus(taskId, isComplete, week);
+        this.Cache.setTaskStatus(taskId, isComplete, week);
+    }
+
+    async removeTaskStatus(taskId: number, week: string){
+
     }
 }

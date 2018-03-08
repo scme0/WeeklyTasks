@@ -7,5 +7,9 @@ export interface IDataStore{
 
     setTaskCurrency(taskId: number, isCurrent: boolean)
 
-    setTaskComplete(taskId: number, week: string, isComplete: boolean)
+    addTaskStatus(taskId: number, isComplete: boolean, week: string);
+
+    setTaskStatus(taskId: number, isComplete: boolean, week: string);
+
+    removeTaskStatus(taskId: number, week: string);
 }

@@ -52,4 +52,11 @@ export class SortingHelpers
             }
         }
     }
+
+    public static getMonday(d) {
+        d = new Date(d);
+        let day = d.getDay()
+        let diff = d.getDate() - day + (day == 0 ? -6 : 1);
+        return new Date(d.setDate(diff)).toDateString();
+    }
 }

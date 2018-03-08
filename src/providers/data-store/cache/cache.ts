@@ -8,8 +8,9 @@ import { SortingHelpers } from "./SortingHelpers";
 export class CacheProvider implements IDataStore
 {
     Tasks: Task[];
+    TasksMap: Task[];
 
-    ThisWeekTasks: TaskStatus[];
+    TaskStatuses: TaskStatus[][];
 
     private taskCurrencyChangedCallback : any = null;
     private taskCompleteChangedCallback : any = null;
@@ -26,7 +27,7 @@ export class CacheProvider implements IDataStore
 
     create(){
         this.Tasks = [];
-        this.ThisWeekTasks = [];
+        this.TaskStatuses = [];
     }
 
     setTaskCurrencyChangeCallback(object: any, method: string)
@@ -42,6 +43,7 @@ export class CacheProvider implements IDataStore
     addTaskAsObject(object: any){
         let task = new Task(object, this, "taskCurrencyChange");
         SortingHelpers.insertSorted(this.Tasks,task,SortingHelpers.TaskComparator());
+        this.TasksMap[task.Id] = task;
     }
 
     addTask(taskName: string, isCurrent: boolean, taskId: number = 0){
@@ -54,6 +56,7 @@ export class CacheProvider implements IDataStore
 
     removeTask (taskId: number){
         this.Tasks.splice(this.Tasks.findIndex(task => task.Id == taskId),1);
+        this.TasksMap[taskId] = null;
     }
 
     setTaskCurrency(taskId: number, isCurrent: boolean){
@@ -71,10 +74,6 @@ export class CacheProvider implements IDataStore
         }
     }
 
-    setTaskComplete(taskId: number, week: string, isComplete: boolean){
-        console.log("not implemented yet");
-    }
-
     taskCompleteChange(taskId: number, isComplete: boolean){
         let callback = this.taskCompleteChangedCallback;
         if (callback !== null)
@@ -83,5 +82,26 @@ export class CacheProvider implements IDataStore
         }
     }
 
+    addTaskStatus(taskId: number, isComplete: boolean, week: string) {
+        let weekStatuses = this.getCachedWeek(week);
+        weekStatuses.push(new TaskStatus(this.TasksMap[taskId],isComplete, this, "taskCompleteChange"));
+    }
+
+    setTaskStatus(taskId: number, isComplete: boolean, week: string) {
+
+    }
+
+    removeTaskStatus(taskId: number, week: string) {
+
+    }
+
+    getCachedWeek(week: string){
+        let weekStatuses = this.TaskStatuses[week];
+        if (weekStatuses === undefined) {
+            weekStatuses = [];
+            this.TaskStatuses[week] = weekStatuses;
+        }
+        return weekStatuses;
+    }
 
 }

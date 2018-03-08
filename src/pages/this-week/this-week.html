@@ -5,5 +5,11 @@
 </ion-header>
 
 <ion-content padding>
-  
+  <ion-list>
+    <ion-item *ngFor="let task of data.TaskStatuses(thisWeek)">
+        <p item-start>{{task.Id}}</p>
+        <ion-label>{{task.Name}}</ion-label>
+        <ion-checkbox item-end [(ngModel)]="task.IsCurrent"></ion-checkbox>
+    </ion-item>
+</ion-list>
 </ion-content>
