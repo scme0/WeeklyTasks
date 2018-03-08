@@ -4,14 +4,14 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import { SQLiteProvider } from '../providers/sqlite/sqlite';
+import { DataProvider } from '../providers/data-store/data/data';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
       rootPage:any;
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, data: SQLiteProvider) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, data: DataProvider) {
     platform.ready().then(() => {
       data.create().then(success => {
         this.rootPage = TabsPage;

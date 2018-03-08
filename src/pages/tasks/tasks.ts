@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { NavController, NavParams, AlertController } from "ionic-angular";
-import { SQLiteProvider } from "../../providers/sqlite/sqlite";
+import { DataProvider } from "../../providers/data-store/data/data";
 
 @Component({
     selector: 'page-tasks',
@@ -9,7 +9,7 @@ import { SQLiteProvider } from "../../providers/sqlite/sqlite";
 export class TasksPage {
 
     constructor(public navCtrl: NavController, 
-                private data: SQLiteProvider, 
+                private data: DataProvider,
                 private alertCtrl: AlertController) {
     }
 

@@ -10,10 +10,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HistoryPage } from '../pages/history/history';
 import { ThisWeekPage } from '../pages/this-week/this-week';
 
-import { SQLiteProvider } from '../providers/sqlite/sqlite';
-
 import { SQLite } from '@ionic-native/sqlite';
 import { TasksPage } from '../pages/tasks/tasks';
+import { SQLiteProvider } from '../providers/data-store/sqlite/sqlite';
+import { CacheProvider } from '../providers/data-store/cache/cache';
+import { DataProvider } from '../providers/data-store/data/data';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,8 @@ import { TasksPage } from '../pages/tasks/tasks';
     StatusBar,
     SplashScreen,
     SQLiteProvider,
+    CacheProvider,
+    DataProvider,
     SQLite,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
