@@ -1,13 +1,25 @@
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import {Injectable} from '@angular/core';
 import { IDataStore } from '../idata-store';
-import { SortingHelpers } from '../cache/SortingHelpers';
+import { WeekProvider } from '../../week/week';
+import { TaskStatus } from '../../../resources/models/task-status';
+
+export class TaskContainer{
+    constructor(public Id: number, 
+                public Name: string, 
+                public IsCurrent: boolean){}
+}
+
+export class TaskStatusContainer{
+    constructor(public Id: number,
+                public IsComplete: boolean){}
+}
 
 @Injectable()
 export class SQLiteProvider implements IDataStore{
     database: SQLiteObject = null;
 
-    constructor(private sqlite: SQLite) {
+    constructor(private sqlite: SQLite, private week: WeekProvider) {
         console.log("SQLiteProvider ctor");
     }
 
@@ -20,72 +32,83 @@ export class SQLiteProvider implements IDataStore{
     }
 
     private async createTasksTable(){
-        await this.database.executeSql(
-            "CREATE TABLE IF NOT EXISTS Tasks(Id INTEGER PRIMARY KEY, Name TEXT NOT NULL, IsCurrent INTEGER DEFAULT 0)", []);
+        return await this.database.executeSql(
+            "CREATE TABLE IF NOT EXISTS Tasks(Id INTEGER PRIMARY KEY, Name TEXT NOT NULL, IsCurrent INTEGER DEFAULT 0)", [])
+            .catch(error => console.log("createTasksTable() error: " + JSON.stringify(error)));
     }
 
-    public async createTaskStatusTable(week: string){
-        await this.database.executeSql(
-            "CREATE TABLE IF NOT EXISTS ?(Id INTEGER PRIMARY KEY, IsComplete INTEGER DEFAULT 0",[week]);
+    async createTaskStatusTable(week: string){
+        return await this.database.executeSql(
+            "CREATE TABLE IF NOT EXISTS "+ week +"(Id INTEGER PRIMARY KEY, IsComplete INTEGER DEFAULT 0)",[])
+            .catch(error => console.log("createTaskStatusTable(" + week +") error: " + JSON.stringify(error)));
     }
 
-    async getTasks() : Promise<any[]> {
-        let tasks = [];
+    async getTasks() : Promise<TaskContainer[]> {
+        let tasks : TaskContainer[] = [];
         let result = await this.database.executeSql("SELECT * FROM Tasks",[]);
         for (let i = 0; i < result.rows.length; i++)
         {
-            tasks.push(result.rows.item(i));
+            let item = result.rows.item(i);
+            tasks.push(new TaskContainer(item.Id, item.Name, (item.IsCurrent === "true")));
         }
         return tasks;
     }
 
-    async getTaskStatus(taskId: number, week: string) {
+    public async getTaskStatus(taskId: number, week: string = this.week.ThisWeek) {
         await this.createTaskStatusTable(week);
-        let result = await this.database.executeSql("SELECT * FROM ? WHERE Id = ?",[week,taskId]);
-        return result.rows.length > 0 ? result.rows.item(0) : null;
+        let result = await this.database.executeSql("SELECT * FROM " + week + " WHERE Id = ?",[taskId])
+                .catch(error => console.log("getTaskStatus(" + taskId + "," + week + ") error: " + JSON.stringify(error)));
+        let item = result.rows.length > 0 ? result.rows.item(0) : null;
+
+        if (item){
+            return new TaskStatusContainer(item.Id, (item.IsComplete === "true"));
+        }
+        return null;
     }
 
-    async getTaskStatuses(week: string) {
-        await this.createTaskStatusTable(week);
-        let taskStatuses = [];
-        let result = await this.database.executeSql("SELECT * FROM ?",[week]);
+    public async getTaskStatuses(week: string) : Promise<TaskStatusContainer[]> {
+        let result1 = await this.createTaskStatusTable(week);
+        let taskStatuses : TaskStatusContainer[] = [];
+        let result = await this.database.executeSql("SELECT * FROM " + week,[])
+            .catch(error => console.log("getTaskStatuses(" + week + ") error: " + JSON.stringify(error)));
         for (let i = 0; i < result.rows.length; i++)
         {
-            taskStatuses.push(result.rows.item(i));
+            let item = result.rows.item(i);
+            taskStatuses.push(new TaskStatusContainer(item.Id, (item.IsComplete === "true")));
         }
         return taskStatuses;
     }
 
     public async addTask(taskName: string, isCurrent: boolean) {
         return await this.database.executeSql("INSERT INTO Tasks (Name, IsCurrent) VALUES (?,?)",[taskName, isCurrent])
-                                  .catch(error => console.log("addTask: error: " + error));
+                                  .catch(error => console.log("addTask: error: " + JSON.stringify(error)));
 
     }
 
     public async removeTask (taskId: number) {
         return await this.database.executeSql("DELETE FROM Tasks WHERE Id = ?",[taskId])
-                                  .catch(error => console.log("remoteTask: error: " + error));
+                                  .catch(error => console.log("remoteTask: error: " + JSON.stringify(error)));
     }
 
-    public async setTaskCurrency(taskId: number, isCurrent: boolean) {
+    public async setTaskCurrent(taskId: number, isCurrent: boolean) {
         return await this.database.executeSql("UPDATE Tasks SET IsCurrent = ? WHERE Id = ?",[isCurrent, taskId])
-                                  .catch(error => console.log("setTaskCurrency: error: " + error));
+                                  .catch(error => console.log("setTaskCurrency: error: " + JSON.stringify(error)));
     }
 
-    public async addTaskStatus(taskId: number, isComplete: boolean, week: string) {
+    public async addTaskStatus(taskId: number, isComplete: boolean, week: string = this.week.ThisWeek) {
         await this.createTaskStatusTable(week);
 
-        return await this.database.executeSql("INSERT INTO ?(Id, IsCurrent) VALUES(?,?)",[week, taskId, isComplete])
-                                  .catch(error => console.log("addTaskStatus: error: " + error));
+        return await this.database.executeSql("INSERT INTO " + week + " (Id, IsComplete) VALUES(?,?)",[taskId, isComplete])
+                                  .catch(error => console.log("addTaskStatus: error: " + JSON.stringify(error)));
     }
 
-    public async setTaskStatus(taskId: number, isComplete: boolean, week: string) {
-        return await this.database.executeSql("UPDATE ? SET IsComplete = ? WHERE Id = ?",[week, isComplete, taskId])
-                                  .catch(error => console.log("setTaskStatus:  error: " + error))
+    public async setTaskComplete(taskId: number, isComplete: boolean, week: string) {
+        return await this.database.executeSql("UPDATE " + week + " SET IsComplete = ? WHERE Id = ?",[isComplete, taskId])
+                                  .catch(error => console.log("setTaskStatus:  error: " + JSON.stringify(error)))
     }
 
-    public async removeTaskStatus(taskId: number, week: string) {
-        return await this.database.executeSql("DELETE FROM ? WHERE Id = ?",[week, taskId])
-                                  .catch(error => console.log("removeTaskStatus: error: " + error));
+    public async removeTaskStatus(taskId: number, week: string = this.week.ThisWeek) {
+        return await this.database.executeSql("DELETE FROM " + week + " WHERE Id = ?",[taskId])
+                                  .catch(error => console.log("removeTaskStatus: error: " + JSON.stringify(error)));
     }
 }

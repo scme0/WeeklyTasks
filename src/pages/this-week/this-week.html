@@ -1,15 +1,18 @@
 <ion-header>
   <ion-navbar>
     <ion-title>This Week</ion-title>
+    <ion-buttons end>
+        <p >{{PercentComplete}}</p>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let task of data.TaskStatuses(thisWeek)">
-        <p item-start>{{task.Id}}</p>
-        <ion-label>{{task.Name}}</ion-label>
-        <ion-checkbox item-end [(ngModel)]="task.IsCurrent"></ion-checkbox>
+    <ion-item *ngFor="let task of TaskStatuses">
+        <p item-start>{{task.Task.Id}}</p>
+        <ion-label>{{task.Task.Name}}</ion-label>
+        <ion-checkbox item-end [(ngModel)]="task.IsComplete"></ion-checkbox>
     </ion-item>
 </ion-list>
 </ion-content>

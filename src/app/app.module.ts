@@ -15,6 +15,7 @@ import { TasksPage } from '../pages/tasks/tasks';
 import { SQLiteProvider } from '../providers/data-store/sqlite/sqlite';
 import { CacheProvider } from '../providers/data-store/cache/cache';
 import { DataProvider } from '../providers/data-store/data/data';
+import { WeekProvider } from '../providers/week/week';
 
 @NgModule({
   declarations: [
@@ -39,11 +40,12 @@ import { DataProvider } from '../providers/data-store/data/data';
   providers: [
     StatusBar,
     SplashScreen,
+    SQLite,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
     SQLiteProvider,
     CacheProvider,
     DataProvider,
-    SQLite,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    WeekProvider,
   ]
 })
 export class AppModule {}
