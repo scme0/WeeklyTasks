@@ -12,7 +12,7 @@ export class ThisWeekPage {
   TaskStatuses: TaskStatus[] = [];
   get PercentComplete(): string {
     if (this.TaskStatuses.length === 0)
-      return "100%";
+      return "";
       
     let counter:number = 0.0;
     this.TaskStatuses.forEach(taskStatus => {if (taskStatus.IsComplete) counter++;})
