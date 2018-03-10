@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-store/data/data';
 import { WeekProvider } from '../../providers/week/week';
 import { TaskStatus } from '../../resources/models/task-status';
+import { Helpers } from '../../resources/helpers/helpers';
 
 @Component({
   selector: 'page-this-week',
@@ -11,12 +12,7 @@ import { TaskStatus } from '../../resources/models/task-status';
 export class ThisWeekPage {
   TaskStatuses: TaskStatus[] = [];
   get PercentComplete(): string {
-    if (this.TaskStatuses.length === 0)
-      return "";
-      
-    let counter:number = 0.0;
-    this.TaskStatuses.forEach(taskStatus => {if (taskStatus.IsComplete) counter++;})
-    return +((counter/this.TaskStatuses.length * 100.0).toFixed(2)) + "%";
+    return Helpers.findPercentageComplete(this.TaskStatuses);
   }
   constructor(private navCtrl: NavController, private data: DataProvider, private week: WeekProvider) {
     week.WeekChanged.on(this.updateWeek.bind(this));

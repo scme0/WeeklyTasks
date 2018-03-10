@@ -8,7 +8,6 @@ export class Helpers
             comparator = Helpers.DefaultComparator();
         }
     
-        // get the index we need to insert the item at
         var min = 0;
         var max = arr.length;
         var index = Math.floor((min + max) / 2);
@@ -21,8 +20,6 @@ export class Helpers
             index = Math.floor((min + max) / 2);
         }
     
-        // insert the item'
-        console.log("inserting: idx: " + index + " item: " + item.Id);
         arr.splice(index, 0, item);
     };
 
@@ -71,16 +68,14 @@ export class Helpers
         }
     }
 
-    public static ToTableNameDateString(date: Date): string
-    {
+    public static ToTableNameDateString(date: Date): string {
         return "week" + date.getFullYear() + "" + this.pad(date.getMonth() + 1,2) + "" + this.pad(date.getDate(),2);
     }
 
-    public static FromTableNameDataString(dateString: string): Date
-    {
-        let year: number = Number.parseInt(dateString.slice(4,7));
-        let month: number = Number.parseInt(dateString.slice(8,9)) - 1;
-        let day: number = Number.parseInt(dateString.slice(10,11));
+    public static FromTableNameDataString(dateString: string): Date {
+        let year: number = Number.parseInt(dateString.slice(4,8));
+        let month: number = Number.parseInt(dateString.slice(8,10)) - 1;
+        let day: number = Number.parseInt(dateString.slice(10,12));
         return new Date(year,month, day);
     }
 
@@ -88,5 +83,22 @@ export class Helpers
         let s = num + "";
         while (s.length < size) s = "0" + s;
         return s;
+    }
+
+    public static findPercentageComplete(tasks: TaskStatus[])
+    {
+        if (tasks)
+        {
+            if (tasks.length === 0)
+                return "No Data";
+            
+            let counter:number = 0.0;
+            tasks.forEach(taskStatus => {if (taskStatus.IsComplete) counter++;})
+
+            if (counter == tasks.length) return "Complete!";
+
+            return +((counter/tasks.length * 100.0).toFixed(2)) + "%";
+        }
+        return "Bad Data";
     }
 }

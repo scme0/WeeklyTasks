@@ -42,7 +42,6 @@ export class WeekProvider
     private checkThisWeekStillValid()
     {
         let currentWeek = Helpers.ToTableNameDateString(this.getMondayOfWeek(new Date()));
-        console.log("checkThisWeekStillValid() " + this.Weeks[0] + " : " + currentWeek);
         if (this.Weeks[0] !== currentWeek)
         {
             this.Weeks.unshift(currentWeek);
