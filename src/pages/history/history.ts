@@ -4,6 +4,7 @@ import { WeekProvider } from '../../providers/week/week';
 import { Helpers } from '../../resources/helpers/helpers';
 import { DataProvider } from '../../providers/data-store/data/data';
 import { TaskStatus } from '../../resources/models/task-status';
+import { SettingsProvider } from '../../providers/settings/settings';
 
 @Component({
   selector: 'page-history',
@@ -13,11 +14,21 @@ export class HistoryPage {
   Helpers = Helpers;
   Weeks = [];
   PercentComplete(tasks): string {
-    return Helpers.findPercentageComplete(tasks);
+    if (tasks.length === 0)
+      return "No Data";
+  
+    let result = Helpers.findPercentageComplete(tasks);
+
+    if (result === 100){
+      return "Complete!";
+    } else {
+      return result + "%";
+    }
   }
   constructor(public navCtrl: NavController, 
               public week: WeekProvider, 
-              public data: DataProvider) { 
+              public data: DataProvider,
+              private settings: SettingsProvider) { 
     this.updateWeeksList();
   }
 

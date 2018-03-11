@@ -88,17 +88,12 @@ export class Helpers
     public static findPercentageComplete(tasks: TaskStatus[])
     {
         if (tasks)
-        {
-            if (tasks.length === 0)
-                return "No Data";
-            
+        {   
             let counter:number = 0.0;
             tasks.forEach(taskStatus => {if (taskStatus.IsComplete) counter++;})
 
-            if (counter == tasks.length) return "Complete!";
-
-            return +((counter/tasks.length * 100.0).toFixed(2)) + "%";
+            return +((counter/tasks.length * 100.0).toFixed(2));
         }
-        return "Bad Data";
+        return -1;
     }
 }

@@ -48,6 +48,22 @@ export class TasksPage {
     }
 
     deleteTask(task) {
-        this.data.removeTask(task.Id);
+        let alert = this.alertCtrl.create({
+            title: 'Delete Task?',
+            message: 'Deleting a task could make you lose historical data. Perhaps deactivate instead?',
+            buttons: [
+            {
+                text: 'Cancel',
+                role: 'cancel',
+            },
+            {
+                text: 'Delete',
+                handler: () => {
+                    this.data.removeTask(task.Id);
+                }
+            }
+            ]
+        });
+        alert.present();
     }
 }

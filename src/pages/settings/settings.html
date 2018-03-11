@@ -11,7 +11,7 @@
         <ion-list-header>General</ion-list-header>
         <button ion-item>
             <ion-label>Previous Weeks Editable</ion-label>
-            <ion-checkbox item-end></ion-checkbox>
+            <ion-checkbox item-end ([ngModel)]="settings.HistoryEditable"></ion-checkbox>
         </button>
         <ion-list-header>Data</ion-list-header>
         <button ion-item>Backup</button>

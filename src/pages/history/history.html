@@ -16,9 +16,9 @@
             <ion-label>No Data</ion-label>
             <ion-checkbox item-end></ion-checkbox>
           </ion-item>
-          <ion-item *ngFor="let task of data.Tasks">
+          <ion-item *ngFor="let task of data.Tasks" (click)="$event.stopPropagation()">
             <ion-label>{{task.Task.Name}}</ion-label>
-            <ion-checkbox item-end [(ngModel)]="task.IsComplete" disabled="true"></ion-checkbox>
+            <ion-checkbox item-end [(ngModel)]="task.IsComplete" disabled="!settings.HistoryEditable"></ion-checkbox>
           </ion-item>
         </ion-list>
       </ion-label>
