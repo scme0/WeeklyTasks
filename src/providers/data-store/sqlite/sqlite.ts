@@ -111,4 +111,31 @@ export class SQLiteProvider implements IDataStore{
         return await this.database.executeSql("DELETE FROM " + week + " WHERE Id = ?",[taskId])
                                   .catch(error => console.log("removeTaskStatus: error: " + JSON.stringify(error)));
     }
+
+    public async createSettingsTable(){
+        return await this.database.executeSql(
+            "CREATE TABLE IF NOT EXISTS Settings(PropertyName TEXT PRIMARY KEY, Value TEXT NOT NULL)", [])
+            .catch(error => console.log("createTasksTable() error: " + JSON.stringify(error)));
+    }
+
+    public async saveSettings(object: any){
+        await this.createSettingsTable();
+        Object.keys(object).forEach(async propertyName =>{
+            await this.database.executeSql(
+                "INSERT OR REPLACE INTO Settings (PropertyName, Value) VALUES(?,?)",[propertyName,object[propertyName]])
+                .catch(error => console.log("saveSettings(" + JSON.stringify(object) + ") error: " + JSON.stringify(error)))
+        });
+    }
+
+    public async loadSettings(){
+        await this.createSettingsTable();
+        let result = await this.database.executeSql(
+            "SELECT * FROM Settings",[])
+            .catch(error => console.log("loadSettings() error: " + JSON.stringify(error)));
+        let object = {};
+        result.rows.forEach(row => {
+            object[row.PropertyName] = row.Value;
+        });
+        return object;
+    }
 }

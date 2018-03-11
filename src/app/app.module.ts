@@ -16,6 +16,7 @@ import { SQLiteProvider } from '../providers/data-store/sqlite/sqlite';
 import { CacheProvider } from '../providers/data-store/cache/cache';
 import { DataProvider } from '../providers/data-store/data/data';
 import { WeekProvider } from '../providers/week/week';
+import { SettingsPage } from '../pages/settings/settings';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { WeekProvider } from '../providers/week/week';
     HistoryPage,
     ThisWeekPage,
     TasksPage,
+    SettingsPage,
     TabsPage
   ],
   imports: [
@@ -35,6 +37,7 @@ import { WeekProvider } from '../providers/week/week';
     HistoryPage,
     ThisWeekPage,
     TasksPage,
+    SettingsPage,
     TabsPage
   ],
   providers: [

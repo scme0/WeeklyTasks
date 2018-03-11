@@ -9,8 +9,11 @@
 
 <ion-content padding>
   <ion-list>
+    <ion-list-header>
+        <ion-label>Task</ion-label>
+        <ion-label item-end>Is Complete</ion-label>
+    </ion-list-header>
     <ion-item *ngFor="let task of TaskStatuses">
-        <p item-start>{{task.Task.Id}}</p>
         <ion-label>{{task.Task.Name}}</ion-label>
         <ion-checkbox item-end [(ngModel)]="task.IsComplete"></ion-checkbox>
     </ion-item>

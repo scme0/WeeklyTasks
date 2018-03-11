@@ -11,9 +11,12 @@
   
   <ion-content padding>
     <ion-list>
+        <ion-list-header>
+            <ion-label>Task</ion-label>
+            <ion-label item-end>Is Active</ion-label>
+        </ion-list-header>
         <ion-item-sliding *ngFor="let task of data.Tasks">
             <ion-item>
-                <p item-start>{{task.Id}}</p>
                 <ion-label>{{task.Name}}</ion-label>
                 <ion-checkbox item-end [(ngModel)]="task.IsCurrent"></ion-checkbox>
             </ion-item>

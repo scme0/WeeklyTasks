@@ -9,14 +9,19 @@
 <ion-content padding>
   <ion-list>
     <button ion-item *ngFor="let data of Weeks" (click)="data.Expanded=!data.Expanded">
-      {{data.Week | date: 'dd MMM yyyy'}}
-      {{PercentComplete(data.Tasks)}}
-      <ion-list *ngIf="data.Expanded">
-        <ion-item>TEST ITEM</ion-item>
-        <!-- <ion-item *ngFor="let task of data.Tasks">
-          {{task.Task.Name}}
-        </ion-item> -->
-      </ion-list>
+      <ion-label>{{data.Week | date: 'dd MMM yyyy'}}
+        <div item-end>{{PercentComplete(data.Tasks)}}</div>
+        <ion-list *ngIf="data.Expanded">
+          <ion-item *ngIf="data.Tasks.length === 0">
+            <ion-label>No Data</ion-label>
+            <ion-checkbox item-end></ion-checkbox>
+          </ion-item>
+          <ion-item *ngFor="let task of data.Tasks">
+            <ion-label>{{task.Task.Name}}</ion-label>
+            <ion-checkbox item-end [(ngModel)]="task.IsComplete" disabled="true"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-label>
     </button>
   </ion-list>
 </ion-content>
