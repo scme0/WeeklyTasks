@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>This Week</ion-title>
     <ion-buttons end>
-        <p >{{PercentComplete}}</p>
+      <p>{{PercentComplete}}</p>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -10,16 +10,25 @@
 <ion-content padding>
   <ion-list>
     <ion-list-header>
-        <ion-label>Task</ion-label>
-        <ion-label item-end>Is Complete</ion-label>
+      <ion-label>Task</ion-label>
+      <ion-label item-end>Is Complete</ion-label>
     </ion-list-header>
     <ion-item *ngFor="let task of TaskStatuses">
-        <ion-label>{{task.Task.Name}}</ion-label>
-        <ion-checkbox item-end [(ngModel)]="task.IsComplete"></ion-checkbox>
+      <ion-label>{{task.Task.Name}}</ion-label>
+      <ion-checkbox item-end [(ngModel)]="task.IsComplete" (ionChange)="listChanged()"></ion-checkbox>
     </ion-item>
   </ion-list>
-  <svg *ngIf="IsComplete" class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-  </svg>
+
+  <body class="popup" *ngIf="IsComplete">
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+      <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+    </svg>
+    <ion-label text-center>
+      All Tasks Complete.
+    </ion-label>
+    <ion-label text-center>
+      <b>Nice Work!</b>
+    </ion-label>
+  </body>
 </ion-content>

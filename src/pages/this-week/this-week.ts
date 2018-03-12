@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, IterableDiffers } from '@angular/core';
+import { NavController, ModalController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-store/data/data';
 import { WeekProvider } from '../../providers/week/week';
 import { TaskStatus } from '../../resources/models/task-status';
@@ -10,29 +10,63 @@ import { Helpers } from '../../resources/helpers/helpers';
   templateUrl: 'this-week.html'
 })
 export class ThisWeekPage {
+
+  private static readonly CompleteString: string = "Complete!";
+
+  iterableDiffer;
+  popupTimeout: number;
   TaskStatuses: TaskStatus[] = [];
-  IsComplete: boolean;
+  
+  IsComplete: boolean = false;
+  PercentComplete: string = "####";
 
-  get PercentComplete(): string {
-    if (this.TaskStatuses.length === 0)
-      return "No Data";
-    
-    let result = Helpers.findPercentageComplete(this.TaskStatuses);
-
-    if (result === 100){
-      this.IsComplete = true;
-      return "Complete!";
-    } else {
-      this.IsComplete = false;
-      return result + "%";
-    }
-  }
-  constructor(private navCtrl: NavController, private data: DataProvider, private week: WeekProvider) {
+  constructor(private navCtrl: NavController,
+              private data: DataProvider,
+              private week: WeekProvider,
+              private _iterableDiffers: IterableDiffers) {
+    this.iterableDiffer = this._iterableDiffers.find([]).create(null);
     week.WeekChanged.on(this.updateWeek.bind(this));
     this.updateWeek();
   }
 
-  async updateWeek(){
+  async updateWeek() {
     this.TaskStatuses = await this.data.TaskStatuses(this.week.ThisWeek);
+    this.listChanged();
+  }
+
+  showCompletePopup(){
+    clearTimeout(this.popupTimeout);
+    this.IsComplete = true;
+    this.popupTimeout = setTimeout(this.hideCompletePopup.bind(this), 3000);
+  }
+
+  hideCompletePopup(){
+    this.IsComplete = false;
+  }
+
+  listChanged()
+  {
+    if (this.TaskStatuses.length === 0)
+    {
+      this.PercentComplete = "No Data";
+      this.hideCompletePopup();
+    }
+
+    let result = Helpers.findPercentageComplete(this.TaskStatuses);
+
+    if (result === 100) {
+      this.PercentComplete = ThisWeekPage.CompleteString;
+      this.showCompletePopup();
+    } else {
+      this.PercentComplete = result + "%";
+      this.hideCompletePopup();
+    }
+  }
+
+  ngDoCheck(){
+    let changes = this.iterableDiffer.diff(this.TaskStatuses);
+    if (changes) {
+      this.listChanged();
+    }
   }
 }
