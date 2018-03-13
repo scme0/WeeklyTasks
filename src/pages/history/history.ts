@@ -38,4 +38,15 @@ export class HistoryPage {
       this.Weeks.push({Week: Helpers.FromTableNameDataString(week), Tasks: taskStatuses, Expanded: false});
     });
   }
+
+  expandData(data){
+    if (data.Tasks.length > 0)
+      data.Expanded = !data.Expanded;
+  }
+
+  taskClicked(event, task){
+    console.log("task clicked");
+    task.IsComplete = !task.IsComplete;
+    event.stopPropagation();
+  }
 }

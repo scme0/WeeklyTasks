@@ -11,18 +11,19 @@ export class SettingsProvider{
         this.loadSettings();
     }
 
-    set HistoryEditable(value: boolean){
+    public set HistoryEditable(value: boolean){
         this.settings.HistoryEditable = value;
         this.sqlite.saveSettings(this.settings);
     }
 
-    get HistoryEditable(): boolean{
+    public get HistoryEditable(): boolean{
         return this.settings.HistoryEditable;
     }
 
-    loadSettings()
+    async loadSettings()
     {
-        let settingsObj = this.sqlite.loadSettings();
-        this.settings.HistoryEditable = settingsObj["HistoryEditable"];
+        let settingsObj = await this.sqlite.loadSettings();
+        console.log("SettingsProvider loadSettings: " + JSON.stringify(settingsObj));
+        this.settings.HistoryEditable = settingsObj["HistoryEditable"] || false;
     }
 }

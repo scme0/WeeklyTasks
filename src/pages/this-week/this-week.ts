@@ -50,6 +50,7 @@ export class ThisWeekPage {
     {
       this.PercentComplete = "No Data";
       this.hideCompletePopup();
+      return;
     }
 
     let result = Helpers.findPercentageComplete(this.TaskStatuses);

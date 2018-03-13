@@ -1,11 +1,13 @@
 export interface IDataStore{
-    create()
+    create();
 
-    addTask(taskName: string, isCurrent: boolean)
+    wipe();
 
-    removeTask (taskId: number)
+    addTask(taskName: string, isCurrent: boolean);
 
-    setTaskCurrent(taskId: number, isCurrent: boolean)
+    removeTask (taskId: number);
+
+    setTaskCurrent(taskId: number, isCurrent: boolean);
 
     setTaskComplete(taskId: number, isComplete: boolean, week: string);
 }

@@ -96,4 +96,19 @@ export class Helpers
         }
         return -1;
     }
+
+    public static convertToType(value: string): any
+    {
+        if (value === "true" || value === "false")
+        {
+            return (value === "true");
+        }
+
+        let numberValue: number = +value;
+        
+        if (!isNaN(numberValue))
+            return numberValue;
+
+        return value;
+    }
 }

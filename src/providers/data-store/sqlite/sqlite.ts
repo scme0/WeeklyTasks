@@ -1,8 +1,10 @@
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { SQLitePorter } from '@ionic-native/sqlite-porter';
 import {Injectable} from '@angular/core';
 import { IDataStore } from '../idata-store';
 import { WeekProvider } from '../../week/week';
 import { TaskStatus } from '../../../resources/models/task-status';
+import { Helpers } from '../../../resources/helpers/helpers';
 
 export class TaskContainer{
     constructor(public Id: number, 
@@ -19,16 +21,28 @@ export class TaskStatusContainer{
 export class SQLiteProvider implements IDataStore{
     database: SQLiteObject = null;
 
-    constructor(private sqlite: SQLite, private week: WeekProvider) {
+    constructor(private sqlite: SQLite, private week: WeekProvider, private sqlitePorter: SQLitePorter) {
         console.log("SQLiteProvider ctor");
     }
 
-    async create()
-    {
+    async create(){
         //Connect database
         this.database = await this.sqlite.create({name: 'data.db', location: 'default'});
         //Create Tasks table if not created.
         await this.createTasksTable();
+    }
+
+    async wipe(){
+        await this.sqlitePorter.wipeDb(this.database);
+        await this.create();
+    }
+
+    async exportData(){
+        return JSON.stringify(await this.sqlitePorter.exportDbToJson(this.database));
+    }
+
+    async importData(json: string){
+        await this.sqlitePorter.importJsonToDb(this.database,json);
     }
 
     private async createTasksTable(){
@@ -132,10 +146,14 @@ export class SQLiteProvider implements IDataStore{
         let result = await this.database.executeSql(
             "SELECT * FROM Settings",[])
             .catch(error => console.log("loadSettings() error: " + JSON.stringify(error)));
+
         let object = {};
-        result.rows.forEach(row => {
-            object[row.PropertyName] = row.Value;
-        });
+        for(let i = 0; i < result.rows.length; i++){
+            let row = result.rows.item(i);
+            let propertyName = row.PropertyName;
+            let value = row.Value;
+            object[propertyName] = Helpers.convertToType(value);
+        }
         return object;
     }
 }

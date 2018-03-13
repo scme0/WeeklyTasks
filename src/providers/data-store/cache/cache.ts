@@ -15,7 +15,7 @@ export class CacheProvider implements IDataStore
     Tasks: Task[] = [];
     TasksMap: ITaskMap = {};
 
-    TaskStatuses: TaskStatus[][] = [];
+    TaskStatuses = {};
 
     private readonly onTaskCurrencyChanged = new LiteEvent<TaskIsCurrentChangedArgs>();
     private readonly onTaskCompleteChanged = new LiteEvent<TaskIsCompleteChangedArgs>();
@@ -36,6 +36,20 @@ export class CacheProvider implements IDataStore
     constructor(private week: WeekProvider){}
 
     create(){}
+
+    wipe(){
+        this.Tasks.splice(0,this.Tasks.length);
+
+        this.TasksMap = {};
+        let weeks = Object.getOwnPropertyNames(this.TaskStatuses);
+        for (let week of weeks)
+        {
+            let taskStatusList: TaskStatus[] = this.TaskStatuses[week];
+            taskStatusList.splice(0,taskStatusList.length);
+        }
+
+        this.create();
+    }
 
     addTaskAsObject(object: any){
         let task = new Task(object);
@@ -100,8 +114,8 @@ export class CacheProvider implements IDataStore
         taskStatus.Task = null;
     }
 
-    getCachedWeek(week: string) : TaskStatus[]{
-        let weekStatuses = this.TaskStatuses[week];
+    getCachedWeek(week: string = this.week.ThisWeek) : TaskStatus[]{
+        let weekStatuses: TaskStatus[] = this.TaskStatuses[week];
         if (weekStatuses === undefined) {
             weekStatuses = [];
             this.TaskStatuses[week] = weekStatuses;
